@@ -267,12 +267,12 @@ The Assignment 4 implementation must:
 
 2. **Check system requirements:**
    ```bash
-   python3 run.py check
+   python run.py check
    ```
 
 3. **Set up the environment:**
    ```bash
-   python3 run.py setup
+   python run.py setup
    ```
 
 4. **Activate virtual environment:**
@@ -286,7 +286,7 @@ The Assignment 4 implementation must:
 
 5. **Build the compiler:**
    ```bash
-   python3 run.py build
+   python run.py build
    ```
 
 6. **Run tests:**
