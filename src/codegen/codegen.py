@@ -210,9 +210,12 @@ class CodeGenerator(BaseVisitor):
         if node.operator in ["<", "<=", ">", ">=", "==", "!="]:
             op_type = FloatType() if is_float_type(left_type) or is_float_type(right_type) else IntType()
             return left_code + right_code + self.emit.emit_re_op(node.operator, op_type, frame), IntType()
+        # TODO: Implement logic for '&&' and '||' ensuring short-circuit evaluation.
+        # TODO: Implement string concatenation using StringBuilder or String.concat when operands are strings.
         raise RuntimeError(f"Unsupported operator: {node.operator}")
 
     def visit_assign_expr(self, node: AssignExpr, o: Access = None):
+        # TODO: Expand assignment support handling for struct fields (MemberAccess). Currently only handles Identifiers.
         if not isinstance(node.lhs, Identifier):
             raise RuntimeError("Minimal codegen only supports identifier assignment")
         rhs_code, rhs_type = self.visit(node.rhs, o)
@@ -248,12 +251,17 @@ class CodeGenerator(BaseVisitor):
         return self.emit.emit_push_const(node.value, StringType(), o.frame), StringType()
 
     def visit_struct_decl(self, node: StructDecl, o: Any = None):
+        # TODO: Create a separate .j emitter instance specifically for this struct class.
+        # It needs emitCLASS, emitSUPER, generate .field (visit_member_decl), and generate parameterless <init> constructor.
         return None
 
     def visit_member_decl(self, node: MemberDecl, o: Any = None):
+        # TODO: Implement field emission for Structs (e.g. .field public mem_name typ)
         return None
 
     def visit_param(self, node: Param, o: Any = None):
+        # Parameters are generally handled eagerly from within FuncDecl. 
+        # Usually, no action is needed here unless your architecture delegates local variable registration.
         return None
 
     def visit_int_type(self, node: IntType, o: Any = None):
@@ -272,32 +280,43 @@ class CodeGenerator(BaseVisitor):
         return node
 
     def visit_for_stmt(self, node: ForStmt, o: Any = None):
+        # TODO: Handle condition, update, and body blocks. You must manage loops labels for 'break' and 'continue' targeting.
         raise RuntimeError("ForStmt not supported in minimal codegen")
 
     def visit_switch_stmt(self, node: SwitchStmt, o: Any = None):
+        # TODO: Implement switch-case jumping logic (Lookupswitch or consecutive labels). Link break cases out of loop block.
         raise RuntimeError("SwitchStmt not supported in minimal codegen")
 
     def visit_case_stmt(self, node: CaseStmt, o: Any = None):
+        # TODO: Handle Case labels.
         raise RuntimeError("CaseStmt not supported in minimal codegen")
 
     def visit_default_stmt(self, node: DefaultStmt, o: Any = None):
+        # TODO: Handle Default labels in switch blocks.
         raise RuntimeError("DefaultStmt not supported in minimal codegen")
 
     def visit_break_stmt(self, node: BreakStmt, o: Any = None):
+        # TODO: Emit GOTO out of the current loop/switch scope boundary.
         raise RuntimeError("BreakStmt not supported in minimal codegen")
 
     def visit_continue_stmt(self, node: ContinueStmt, o: Any = None):
+        # TODO: Emit GOTO to the current loop's evaluation block label.
         raise RuntimeError("ContinueStmt not supported in minimal codegen")
 
     def visit_prefix_op(self, node: PrefixOp, o: Any = None):
+        # TODO: Handle prefix operations (e.g. !expr, -expr). Emit evaluating code then negating/flipping it.
         raise RuntimeError("PrefixOp not supported in minimal codegen")
 
     def visit_postfix_op(self, node: PostfixOp, o: Any = None):
+        # TODO: Postfix might not exist in standard TyC, check spec. If so, handle appropriately.
         raise RuntimeError("PostfixOp not supported in minimal codegen")
 
     def visit_member_access(self, node: MemberAccess, o: Any = None):
+        # TODO: Handle struct field extraction. You will need GETFIELD / PUTFIELD instructions via emitter.
         raise RuntimeError("MemberAccess not supported in minimal codegen")
 
     def visit_struct_literal(self, node: StructLiteral, o: Any = None):
+        # TODO: Handle struct instantiation. Use NEW struct_name, DUP, INVOKESPECIAL to the default constructor 
+        # (<init>) and initialize each supplied field values utilizing PUTFIELD.
         raise RuntimeError("StructLiteral not supported in minimal codegen")
 

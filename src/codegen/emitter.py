@@ -327,6 +327,7 @@ class Emitter:
         """
         frame.pop()
         if lexeme == "+":
+            # TODO: Add support for string concatenation using String.concat or StringBuilder if TyC supports string '+'
             if is_int_type(in_):
                 return self.jvm.emitIADD()
             else:
@@ -678,6 +679,7 @@ class Emitter:
         Returns:
             Generated prolog directives string
         """
+        # TODO: Add logic (or a dedicated method) to emit headers specifically for Struct classes (.class public StructName).
         result = list()
         result.append(self.jvm.emitSOURCE(name + ".java"))
         result.append(self.jvm.emitCLASS("public " + name))
@@ -707,3 +709,7 @@ class Emitter:
         Clear the code buffer.
         """
         self.buff.clear()
+
+    # TODO: Add emission methods for missing Struct components (like emit_field for `.field` and emitting a default parameterless constructor).
+    # TODO: Implement any missing labeling/jump mechanisms for short-circuiting logic `&&` and `||`.
+
